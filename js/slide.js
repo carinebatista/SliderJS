@@ -6,8 +6,8 @@ export default class Slide{
 	}
 
 		moveSlide(distX){
-			this.slide.style.transform  = `translate3d(${distX}px, 0, 0)`;
 			this.dist.movePosition = distX
+			this.slide.style.transform  = `translate3d(${distX}px, 0, 0)`;
 		}
 	
 		updatePosition(clientX){
@@ -29,14 +29,14 @@ export default class Slide{
 		}
 
 		onMove(event){
-			const pointerPosition = (event.type === 'mousemove') ?
-				event.clientX : event.changedTouches[0].clientX
+			const pointerPosition = (event.type === 'mousemove') ? event.clientX : event.changedTouches[0].clientX
 			const finalPosition = this.updatePosition(pointerPosition)
 			this.moveSlide(finalPosition)
 		}
 
 		onEnd(event){
-			this.wrapper.removeEventListener('mousemove', this.onMove)
+			const movetype = (event.type === 'mouseup') ? 'mousemove' : 'touchmove'
+			this.wrapper.removeEventListener(movetype, this.onMove)
 			this.dist.finalPosition = this.dist.movePosition
 		}
 
@@ -63,7 +63,7 @@ export default class Slide{
 
 		// Slides Config
 		slidesConfig(){
-			const slideArray = [...this.slide.children].map((element) => {
+			this.slideArray = [...this.slide.children].map((element) => {
 				const position = this.slidePosition(element)
 				return {position, element}
 			})
@@ -83,7 +83,6 @@ export default class Slide{
 			this.moveSlide(activeSlide.position)
 			this.slidesIndexNav(index)
 			this.dist.finalPosition = activeSlide.position
-			console.log(this.index)
 		}
 
 		init(){
